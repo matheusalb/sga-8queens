@@ -1,1 +1,1 @@
-# ags-8queens
+# sga-8queens
