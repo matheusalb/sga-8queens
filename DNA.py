@@ -37,7 +37,6 @@ class DNA:
         if (np.random.rand() < crossover_prob):
             # Escolhe ponto de crossover
             cut_pos = np.random.randint(1, cls.n_genes/3) * 3
-            print(cut_pos)
             # Copia primeira parte nos filhos        
             genes_1 = dna_1.genes[0:cut_pos]
             genes_2 = dna_2.genes[0:cut_pos]
