@@ -1,8 +1,5 @@
-from audioop import reverse
-from urllib.parse import DefragResult
 from Board import Board
 import numpy as np
-import datetime
 
 class SGA_8queens:
     def __init__(self, population_size, n_generations, crossover_probability, mutation_probability):
@@ -23,6 +20,7 @@ class SGA_8queens:
             self.population.append(Board())
             if self.population[-1].fitness == 1:
                 self.solution.append(self.population[-1])
+                self.best = self.solution[-1]
     
     def _parent_selection_ranking(self, n_parents = 2, n_choice = 5):
         choices = np.random.choice(self.population_size, n_choice, replace=False)
@@ -40,7 +38,6 @@ class SGA_8queens:
     def _run_generation(self):
         parents = self._parent_selection_ranking()
         offspring = Board.reproduce(*parents)
-        # print(offspring, self.population)
         self.population = self._survivor_selection(offspring)
         self.best = self.population[0]
         # Verifica se é solução
@@ -48,18 +45,23 @@ class SGA_8queens:
             if child.fitness == 1:
                 self.solution.append(child)
         
-    def fit(self):
-        generation_time = datetime.datetime.now().strftime('%d_%m_%Y_%H_%M_%S')
-        individuals = open("data/individuals_" + generation_time + ".log","w+")
-        for i in range(self.n_generations):
-            self._run_generation()
-            print("Best individual of generation " + str(i) + " ", self.best.phenotype())
-            print("Fitness:", self.best.fitness)
-            
-            individuals.write('------------> gen: ' + str(i) + "\n")
-            for p in self.population:
-                individuals.write(str(p.phenotype())+ "\n")
-                individuals.write('fitness: ' + str(p.fitness)+ "\n")
-            
-            if len(self.solution) > 0:
-                break     
+    def fit(self):        
+        converged = False
+        final_i = 0
+        n_converged = len(self.solution)
+        
+        if n_converged == 0:
+            for i in range(self.n_generations):
+                self._run_generation()
+                print("Best individual of generation " + str(i) + " ", self.best.phenotype)
+                print("Fitness:", self.best.fitness)
+                                
+                if len(self.solution) > 0:
+                    converged = True
+                    final_i = i
+                    n_converged = len(self.solution)
+                    break
+        else:
+            converged = True
+        
+        return self.population, final_i, converged, n_converged, self.best
