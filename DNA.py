@@ -1,9 +1,9 @@
-from cgitb import text
-from itertools import permutations
 import textwrap
 import numpy as np
 
-class DNA:
+from DNA_base import DNA_base
+
+class DNA(DNA_base):
     n_genes = 24
     def __init__(self, genes=None):
         
@@ -17,9 +17,6 @@ class DNA:
         else:
             self.genes = genes
     
-    def copy(self):
-        return DNA(self.genes[:])
-    
     @staticmethod
     def __insert_values(genes, insert):        
         genes_list = textwrap.wrap(genes, 3) 
@@ -32,8 +29,10 @@ class DNA:
         return ''.join(genes_list)
 
     @classmethod
-    def crossover_cut_crossfill(cls, dna_1, dna_2, crossover_prob):
-        
+    def crossover(cls, dna_1, dna_2, crossover_prob):
+        '''
+            crossover_cut_crossfill
+        '''
         if (np.random.rand() < crossover_prob):
             # Escolhe ponto de crossover
             cut_pos = np.random.randint(1, cls.n_genes/3) * 3
@@ -53,7 +52,10 @@ class DNA:
     
         return cls(genes_1), cls(genes_2)
         
-    def mutate_swap(self, mutation_prob):
+    def mutate(self, mutation_prob):
+        '''
+            Mutate Swap
+        '''
         if (np.random.rand() < mutation_prob):
             i = np.random.randint(0, self.n_genes/3) 
             j = np.random.randint(0, self.n_genes/3)
@@ -64,3 +66,7 @@ class DNA:
             
             gen_list[i], gen_list[j] = gen_list[j], gen_list[i]
             self.genes = ''.join(gen_list)
+
+    def generate_phenotype(self):
+        genes = textwrap.wrap(self.genes, 3)
+        return list(map(lambda g: int(g, 2), genes))
