@@ -2,10 +2,14 @@ from statistics import mean, stdev
 from sga.SGA_8queens import SGA_8queens
 import datetime
 from utils.utils import increment_path
+import sys
 
 
 def main():
-    n = 30
+    try:
+        n = int(sys.argv[1])
+    except:
+        n = 30
 
     execution_convergences = 0
     converged_iteraction = []
