@@ -1,7 +1,7 @@
 import textwrap
 import numpy as np
 
-from dna.DNA_base import DNA_base
+from DNA_base import DNA_base
 
 
 class DNA(DNA_base):
