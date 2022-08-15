@@ -34,13 +34,39 @@ class SGA_8queens:
 
         return ranking[0:n_parents]
 
+    def _parent_selection_roulette(self, n_parents=2):
+        sumFitness = 0
+        roulette = []
+        sumRange = 0
+
+        for p in self.population:
+            sumFitness += p.fitness
+        
+        for i in range(len(self.population)):
+            roulette.append({'individuo': self.population[i], 'botomLimit': sumRange/sumFitness, 'upperLimit': (sumRange + self.population[i].fitness)/sumFitness})
+            sumRange += self.population[i].fitness
+        
+        choices = np.random.rand(n_parents)
+        parents = []
+        for i in range(n_parents):
+            for j in range(len(roulette)):
+                e = roulette[j]
+                if((e['botomLimit'] >= choices[i] and choices[i]  <= e['upperLimit']) or j == (len(roulette) -1)):
+                    parents.append(e['individuo'])
+                    break
+
+        return parents
+
     def _survivor_selection(self, offspring):
         selection = self.population + offspring
         selection.sort(reverse=True, key=lambda b: b.fitness)
         return selection[0:self.population_size]
 
-    def _run_generation(self):
-        parents = self._parent_selection_ranking()
+    def _run_generation(self, usingRanking):
+        if usingRanking:
+            parents = self._parent_selection_ranking()
+        else:
+            parents = self._parent_selection_roulette()
         offspring = Board.reproduce(*parents)
         self.population = self._survivor_selection(offspring)
         self.best = self.population[0]
@@ -49,14 +75,14 @@ class SGA_8queens:
             if child.fitness == 1:
                 self.solution.append(child)
 
-    def fit(self):
+    def fit(self, usingRanking=False):
         converged = False
         final_i = 0
         n_converged = len(self.solution)
 
         if n_converged == 0:
             for i in range(self.n_generations):
-                self._run_generation()
+                self._run_generation(usingRanking)
                 print("Best individual of generation " + str(i) + " ",
                       self.best.phenotype)
                 print("Fitness:", self.best.fitness)

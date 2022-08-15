@@ -19,7 +19,7 @@ def main():
         print('\n----> execution:', i)
 
         eight_queens = SGA_8queens(100, 10000, 0.9, 0.4)
-        population, final_i, converge, n_converge, best = eight_queens.fit()
+        population, final_i, converge, n_converge, best = eight_queens.fit(False)
 
         bests.append(best)
 
