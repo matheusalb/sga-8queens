@@ -1,7 +1,7 @@
 import textwrap
 import numpy as np
 
-from DNA_base import DNA_base
+from dna.DNA_base import DNA_base
 
 
 class DNA_List_Numeric(DNA_base):
@@ -37,8 +37,12 @@ class DNA_List_Numeric(DNA_base):
 
             print(cut_pos)
             # Insere valores dos pais trocados, começando a partir do ponto de quebra
-            aux_1 = np.concatenate((dna_2.genes[cut_pos:cls.n_genes], dna_2.genes[0:cut_pos]))
-            aux_2 = np.concatenate((dna_1.genes[cut_pos:cls.n_genes], dna_1.genes[0:cut_pos]))
+            aux_1 = np.concatenate(
+                (dna_2.genes[cut_pos: cls.n_genes],
+                 dna_2.genes[0: cut_pos]))
+            aux_2 = np.concatenate(
+                (dna_1.genes[cut_pos: cls.n_genes],
+                 dna_1.genes[0: cut_pos]))
 
             genes_1 = DNA_List_Numeric.__insert_values(genes_1, aux_1)
             genes_2 = DNA_List_Numeric.__insert_values(genes_2, aux_2)
@@ -61,5 +65,4 @@ class DNA_List_Numeric(DNA_base):
             self.genes[i], self.genes[j] = self.genes[j], self.genes[i]
 
     def generate_phenotype(self):
-        genes = textwrap.wrap(self.genes, 3)
-        return list(map(lambda g: int(g, 2), genes))
+        return self.genes
