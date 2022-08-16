@@ -5,7 +5,7 @@ import numpy as np
 class SGA_8queens:
     def __init__(
             self, population_size, n_generations, crossover_probability,
-            mutation_probability):
+            mutation_probability, fitness='default'):
         self.population = []
         self.population_size = population_size
         self.n_generations = n_generations
@@ -15,12 +15,13 @@ class SGA_8queens:
         self.solution = []
         Board.crossover_prob = self.crossover_probability
         Board.mutation_prob = self.mutation_probability
+        Board.fitness_type = fitness
 
-        self._initialize_population()
+        self._initialize_population(fitness)
 
-    def _initialize_population(self):
+    def _initialize_population(self, fitness='default'):
         for i in range(self.population_size):
-            self.population.append(Board())
+            self.population.append(Board(fitness=fitness))
             if self.population[-1].fitness == 1:
                 self.solution.append(self.population[-1])
                 self.best = self.solution[-1]
@@ -41,17 +42,18 @@ class SGA_8queens:
 
         for p in self.population:
             sumFitness += p.fitness
-        
+
         for i in range(len(self.population)):
-            roulette.append({'individuo': self.population[i], 'botomLimit': sumRange/sumFitness, 'upperLimit': (sumRange + self.population[i].fitness)/sumFitness})
+            roulette.append({'individuo': self.population[i], 'botomLimit': sumRange/sumFitness, 'upperLimit': (
+                sumRange + self.population[i].fitness)/sumFitness})
             sumRange += self.population[i].fitness
-        
+
         choices = np.random.rand(n_parents)
         parents = []
         for i in range(n_parents):
             for j in range(len(roulette)):
                 e = roulette[j]
-                if((e['botomLimit'] >= choices[i] and choices[i]  <= e['upperLimit']) or j == (len(roulette) -1)):
+                if((e['botomLimit'] >= choices[i] and choices[i] <= e['upperLimit']) or j == (len(roulette) - 1)):
                     parents.append(e['individuo'])
                     break
 
@@ -72,8 +74,12 @@ class SGA_8queens:
         self.best = self.population[0]
         # Verifica se é solução
         for child in offspring:
-            if child.fitness == 1:
-                self.solution.append(child)
+            if Board.fitness_type == 'default':
+                if child.fitness == 1:
+                    self.solution.append(child)
+            elif Board.fitness_type == 'linear':
+                if child.fitness == 28:
+                    self.solution.append(child)
 
     def fit(self, usingRanking=False):
         converged = False

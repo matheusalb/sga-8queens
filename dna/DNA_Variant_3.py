@@ -1,7 +1,8 @@
 import textwrap
 import numpy as np
 
-from DNA_base import DNA_base
+from dna.DNA_base import DNA_base
+
 
 class DNA_Variant_3(DNA_base):
     n_genes = 8
@@ -12,7 +13,7 @@ class DNA_Variant_3(DNA_base):
         '''
         if genes is None:
             permutation = np.random.permutation(self.n_genes)
-        
+
             self.genes = permutation
         else:
             self.genes = genes
@@ -21,7 +22,7 @@ class DNA_Variant_3(DNA_base):
     def __insert_values(genes, insert):
         genes_list = textwrap.wrap(genes, 3)
         insert_list = textwrap.wrap(insert, 3)
-    
+
         for v in insert_list:
             if v not in genes_list:
                 genes_list.append(v)
@@ -62,17 +63,19 @@ class DNA_Variant_3(DNA_base):
             while (j == i):
                 j = np.random.randint(0, self.n_genes)
 
-            i, j = min(i,j), max(i,j)
+            i, j = min(i, j), max(i, j)
             print(i, j)
-            self.genes = np.concatenate((self.genes[0:i], np.random.shuffle(self.genes[i:j+1]), 
-                                        self.genes[j+1:]))
-            
+            self.genes = np.concatenate(
+                (self.genes[0: i],
+                 np.random.shuffle(self.genes[i: j + 1]),
+                 self.genes[j + 1:]))
+
     def generate_phenotype(self):
         return self.genes
 
 
-dna = DNA_Variant_3()
+# dna = DNA_Variant_3()
 
-print(dna.genes)
-dna.mutate(1)
-print(dna.genes)
+# print(dna.genes)
+# dna.mutate(1)
+# print(dna.genes)

@@ -2,7 +2,8 @@ from operator import mod
 import textwrap
 import numpy as np
 
-from DNA_base import DNA_base
+from dna.DNA_base import DNA_base
+
 
 class DNA_Variant_7(DNA_base):
     n_genes = 8
@@ -13,7 +14,7 @@ class DNA_Variant_7(DNA_base):
         '''
         if genes is None:
             permutation = np.random.permutation(self.n_genes)
-        
+
             self.genes = permutation
         else:
             self.genes = genes
@@ -22,7 +23,7 @@ class DNA_Variant_7(DNA_base):
     def __insert_values(genes, insert, i, j):
         size = len(genes)
         j = mod(j+1, size)
-        
+
         for v in insert:
             if i == j:
                 break
@@ -38,21 +39,22 @@ class DNA_Variant_7(DNA_base):
             Cruzamento Cícilico 
         '''
         if (np.random.rand() < crossover_prob):
-            genes_1, genes_2 = DNA_Variant_7.CX_crossover(dna_1.genes.tolist(), dna_2.genes.tolist())
+            genes_1, genes_2 = DNA_Variant_7.CX_crossover(
+                dna_1.genes.tolist(), dna_2.genes.tolist())
         else:
             genes_1 = dna_1.genes[:]
             genes_2 = dna_2.genes[:]
 
         return cls(genes_1), cls(genes_2)
-    
+
     @staticmethod
     def CX_crossover(parent1, parent2):
         '''
-        
+
         '''
         cycles = [-1]*DNA_Variant_7.n_genes
         cycle_no = 1
-        cyclestart = (i for i,v in enumerate(cycles) if v < 0)
+        cyclestart = (i for i, v in enumerate(cycles) if v < 0)
 
         for pos in cyclestart:
 
@@ -62,25 +64,27 @@ class DNA_Variant_7(DNA_base):
 
             cycle_no += 1
 
-        child1 = [parent1[i] if n%2 else parent2[i] for i,n in enumerate(cycles)]
-        child2 = [parent2[i] if n%2 else parent1[i] for i,n in enumerate(cycles)]
+        child1 = [parent1[i] if n % 2 else parent2[i]
+                  for i, n in enumerate(cycles)]
+        child2 = [parent2[i] if n % 2 else parent1[i]
+                  for i, n in enumerate(cycles)]
 
         return np.array(child1), np.array(child2)
 
     def mutate(self, mutation_prob):
         pass
-            
+
     def generate_phenotype(self):
         return self.genes
 
 
-dna_1 = DNA_Variant_7()
-dna_2 = DNA_Variant_7()
+# dna_1 = DNA_Variant_7()
+# dna_2 = DNA_Variant_7()
 
-print(dna_1.genes)
-print(dna_2.genes)
+# print(dna_1.genes)
+# print(dna_2.genes)
 
-dna_f1, dna_f2 = DNA_Variant_7.crossover(dna_1, dna_2, 1)
+# dna_f1, dna_f2 = DNA_Variant_7.crossover(dna_1, dna_2, 1)
 
-print(dna_f1.genes)
-print(dna_f2.genes)
+# print(dna_f1.genes)
+# print(dna_f2.genes)

@@ -1,7 +1,8 @@
 import textwrap
 import numpy as np
 
-from DNA_base import DNA_base
+from dna.DNA_base import DNA_base
+
 
 class DNA_Variant_1(DNA_base):
     n_genes = 8
@@ -12,7 +13,7 @@ class DNA_Variant_1(DNA_base):
         '''
         if genes is None:
             permutation = np.random.permutation(self.n_genes)
-        
+
             self.genes = permutation
         else:
             self.genes = genes
@@ -31,17 +32,17 @@ class DNA_Variant_1(DNA_base):
             while (j == i or i == j-1 or i == j+1):
                 j = np.random.randint(0, self.n_genes)
 
-            i, j = min(i,j), max(i,j)
+            i, j = min(i, j), max(i, j)
             print(i, j)
             self.genes = np.concatenate((self.genes[0:i+1], self.genes[[j]],
                                          self.genes[i+1:j], self.genes[j+1:]))
-            
+
     def generate_phenotype(self):
         return self.genes
 
 
-dna = DNA_Variant_1()
+# dna = DNA_Variant_1()
 
-print(dna.genes)
-dna.mutate(1)
-print(dna.genes)
+# print(dna.genes)
+# dna.mutate(1)
+# print(dna.genes)

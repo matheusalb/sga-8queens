@@ -6,10 +6,11 @@ class Board:
     crossover_prob = None
     mutation_prob = None
 
-    def __init__(self, dna=None):
+    def __init__(self, dna=None, fitness='default'):
         self._DNA = DNA() if dna is None else dna
         self.phenotype = self._DNA.generate_phenotype()
         self.fitness = self._calculate_fitness()
+        self.fitness_type = fitness
 
     @staticmethod
     def check_collision(l1, c1, l2, c2):
@@ -22,8 +23,10 @@ class Board:
             for j in range(i+1, len(queens)):
                 if Board.check_collision(i, queens[i], j, queens[j]):
                     collisions += 1
-
-        return 1/(1+collisions)
+        if self.fitness_type == 'default':
+            return 1/(1+collisions)
+        elif self.fitness_type == 'linear':
+            return (28 - collisions)
 
     @classmethod
     def reproduce(cls, board_1, board_2):

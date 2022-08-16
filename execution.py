@@ -21,8 +21,9 @@ def main():
     for i in range(n):
         print('\n----> execution:', i)
 
-        eight_queens = SGA_8queens(100, 10000, 0.9, 0.4)
-        population, final_i, converge, n_converge, best = eight_queens.fit(False)
+        eight_queens = SGA_8queens(100, 10000, 0.9, 0.4, fitness='default')
+        population, final_i, converge, n_converge, best = eight_queens.fit(
+            True)
 
         bests.append(best)
 
@@ -55,16 +56,18 @@ def main():
         individuals.write(str(b.phenotype) + "---> ")
         individuals.write('fitness: ' + str(b.fitness) + "\n")
 
-    #ploat iterations
+    # ploat iterations
     plt.xlabel('Executions')
     plt.ylabel('Iterations')
     plt.plot(converged_iteraction,  label="Nº Generations")
-    plt.plot(np.full(len(converged_iteraction),mean(converged_iteraction)), label="Median")
+    plt.plot(np.full(len(converged_iteraction), mean(
+        converged_iteraction)), label="Median")
     plt.legend(loc="upper left")
 
     generation_time = datetime.datetime.now().strftime('%d_%m_%Y_%H_%M_%S')
     path_graph = "data/individuals_execution_" + generation_time + ".png"
     plt.savefig(path_graph)
+
 
 if __name__ == '__main__':
     main()
