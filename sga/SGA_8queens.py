@@ -1,3 +1,4 @@
+from select import select
 from board.Board import Board
 import numpy as np
 
@@ -63,14 +64,28 @@ class SGA_8queens:
         selection = self.population + offspring
         selection.sort(reverse=True, key=lambda b: b.fitness)
         return selection[0:self.population_size]
+    
+    def _survivor_selection_geracional(self, offspring, parents):
+        self.population.remove(parents[0])
+        self.population.remove(parents[1])
+        self.population.append(offspring[0])
+        self.population.append(offspring[1])
 
-    def _run_generation(self, usingRanking):
+        return self.population
+
+    def _run_generation(self, usingRanking, generationalSelection):
         if usingRanking:
             parents = self._parent_selection_ranking()
         else:
             parents = self._parent_selection_roulette()
+        
         offspring = Board.reproduce(*parents)
-        self.population = self._survivor_selection(offspring)
+        
+        if generationalSelection:
+            self.population = self._survivor_selection_geracional(offspring, parents)
+        else:
+            self.population = self._survivor_selection(offspring)
+            
         self.best = self.population[0]
         # Verifica se é solução
         for child in offspring:
